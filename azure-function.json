@@ -19,22 +19,13 @@
             "metadata": {
                 "description": "Storage Account type"
             }
-        },        
-        "keyVault-settings": {
-            "type": "object",
-            "metadata": {
-                "description": "These are settings for the Key Vault"
-            }
-        }       
+        }     
     },
     "variables": {
         "functionAppName": "[parameters('appName')]",
         "hostingPlanName": "[parameters('appName')]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
-        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-        "ids": {
-             "keyVault": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVault-settings').existingRg, '/providers/Microsoft.KeyVault/vaults/', parameters('keyVault-settings').name)]"
-        }
+        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
     },
     "resources": [
         {
@@ -102,10 +93,6 @@
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "6.5.0"
-                        }, 
-                        {
-                            "name": "SOME_SECRET",
-                            "value": "[parameters('adminPassword')]"                     
                         }
                     ]
                 }
