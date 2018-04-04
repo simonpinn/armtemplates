@@ -19,13 +19,22 @@
             "metadata": {
                 "description": "Storage Account type"
             }
-        }
+        },        
+        "keyVault-settings": {
+            "type": "object",
+            "metadata": {
+                "description": "These are settings for the Key Vault"
+            }
+        }       
     },
     "variables": {
         "functionAppName": "[parameters('appName')]",
         "hostingPlanName": "[parameters('appName')]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
-        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        "ids": {
+             "keyVault": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVault-settings').existingRg, '/providers/Microsoft.KeyVault/vaults/', parameters('keyVault-settings').name)]",
+        }
     },
     "resources": [
         {
@@ -58,7 +67,18 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
+            ],            
+        "parameters": {
+            "adminPassword": {
+                "reference": {
+                    "keyVault": {
+                        "id": "[variables('ids').keyVault]"
+                            },
+                            "secretName": "[parameters('keyVault-settings').secret"
+                        }
+                 }
+             }
+         },
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "siteConfig": {
@@ -82,6 +102,10 @@
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "6.5.0"
+                        }, 
+                        {
+                            "name": "SOME_SECRET",
+                            "value": "[parameters('adminPassword')]"                     
                         }
                     ]
                 }
