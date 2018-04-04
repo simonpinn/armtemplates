@@ -58,18 +58,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],            
-        "parameters": {
-            "adminPassword": {
-                "reference": {
-                    "keyVault": {
-                        "id": "[variables('ids').keyVault]"
-                            },
-                            "secretName": "[parameters('keyVault-settings').secret"
-                        }
-                 }
-             }
-         ,
+            ],                    
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "siteConfig": {
